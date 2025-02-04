@@ -1,0 +1,44 @@
+services:
+  nim:
+    image: nvcr.io/nim/nvidia/llama-3.2-nv-embedqa-1b-v2:latest
+    container_name: nim-server
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    runtime: nvidia
+    shm_size: "16gb"
+    env_file:
+      - .env
+    volumes:
+      - "${LOCAL_NIM_CACHE}:/opt/nim/.cache"
+    user: "${UID}:${GID}"
+    ports:
+      - "8020:8000"
+    networks:
+      - nim_network
+
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi-nim-proxy
+    volumes:
+      - ./app/app.db:/app/app.db
+    depends_on:
+      - nim
+    ports:
+      - "8000:8000"
+    networks:
+      - nim_network
+    env_file:
+      - .env
+    restart: always
+
+networks:
+  nim_network:
+    driver: bridge
+
