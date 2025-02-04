@@ -1,0 +1,6 @@
+bcrypt
+fastapi
+httpx
+pydantic
+sqlite-utils
+uvicorn
