@@ -1,4 +1,4 @@
-rom fastapi import FastAPI, Depends, Request, Security, HTTPException
+from fastapi import FastAPI, Depends, Request, Security, HTTPException
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.security.api_key import APIKeyHeader
 import httpx
